@@ -1,32 +1,33 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title class="ion-text-center">
-      Niños
-    </ion-title>
+    <ion-title class="ion-text-center"> Niños </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
   <ion-item lines="none">
     <ion-button fill="solid" color="primary" (click)="presentAddChildAlert()">
       <ion-icon slot="icon-only" name="add-outline"></ion-icon>
     </ion-button>
   </ion-item>
 
-  <ion-accordion-group [multiple]="true" class="ion-margin-top">
-    <ion-accordion value="first">
+  <ion-accordion-group>
+    <ion-accordion
+      *ngFor="let child of children; let index = index"
+      [value]="index"
+    >
       <ion-item slot="header" color="light" lines="none">
         <ion-thumbnail slot="start">
-          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+          <img alt="foto" [src]="child.foto" loading="lazy" />
         </ion-thumbnail>
         <ion-label class="ion-text-wrap">
-          <h2>Nombre Completo</h2>
-          <p>Detalles adicionales aquí</p>
+          <h2>{{ child.nombres }} {{ child.apepat }} {{ child.apemat }}</h2>
+          <p>{{ child.edad }} años</p>
         </ion-label>
       </ion-item>
       <div class="ion-padding" slot="content">
-        Aquí va el contenido adicional sobre el niño, como detalles específicos.
+        <p>Fecha de Nacimiento: {{ child.fecha_nac }}</p>
+        <p>Deseo: {{ child.deseo }}</p>
       </div>
     </ion-accordion>
   </ion-accordion-group>

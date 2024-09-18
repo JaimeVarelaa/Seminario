@@ -10,15 +10,19 @@ import { SqliteService } from 'src/app/services/sqlite.service';
 })
 export class ChildrenComponent implements OnInit {
   private capturedPhoto: string | null = null;
+  children: any[] = [];
 
   constructor(
     private alertController: AlertController,
     private sqliteService: SqliteService
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    await console.log(this.sqliteService.getChild());
-  }
+  ngOnInit() {
+    setTimeout(async () => {
+      this.children = await this.sqliteService.getChild();
+      console.log('Children:', this.children);
+    }, 3000);
+  }  
 
   async presentAddChildAlert() {
     const photo = await this.capturePhoto();
@@ -34,21 +38,21 @@ export class ChildrenComponent implements OnInit {
         { name: 'apemat', type: 'text', placeholder: 'Apellido Materno' },
         { name: 'edad', type: 'number', placeholder: 'Edad' },
         { name: 'fecha_nac', type: 'date', placeholder: 'Fecha de Nacimiento' },
-        { name: 'deseo', type: 'text', placeholder: 'Deseo' }
+        { name: 'deseo', type: 'text', placeholder: 'Deseo' },
       ],
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Agregar',
           handler: async (data) => {
             data.foto = photo;
             await this.sqliteService.addChild(data);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -60,7 +64,7 @@ export class ChildrenComponent implements OnInit {
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.Base64,
-        source: CameraSource.Camera
+        source: CameraSource.Camera,
       });
 
       return `data:image/jpeg;base64,${image.base64String}`;
