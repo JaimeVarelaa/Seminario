@@ -25,13 +25,10 @@ export class AppComponent {
 
     this.platform.ready().then( async () => {
 
-      // Comprobamos si estamos en web
       const info = await Device.getInfo();
       this.isWeb = info.platform == 'web';
 
-      // Iniciamos la base de datos
       this.sqlite.init();
-      // Esperamos a que la base de datos este lista
       this.sqlite.dbReady.subscribe(load => {
         this.load = load;
       })
