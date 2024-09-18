@@ -29,7 +29,7 @@ export class ChildrenComponent implements OnInit {
     if (!photo) {
       return;
     }
-
+  
     const alert = await this.alertController.create({
       header: 'Agregar Niño',
       inputs: [
@@ -50,13 +50,16 @@ export class ChildrenComponent implements OnInit {
           handler: async (data) => {
             data.foto = photo;
             await this.sqliteService.addChild(data);
+  
+            this.children.push(data);
           },
         },
       ],
     });
-
+  
     await alert.present();
   }
+  
 
   async capturePhoto(): Promise<string | null> {
     try {

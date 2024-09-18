@@ -5,13 +5,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-item lines="none">
-    <ion-button fill="solid" color="primary" (click)="presentAddChildAlert()">
-      <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-    </ion-button>
-  </ion-item>
+  <ion-button slot="fixed" (click)="presentAddChildAlert()"
+    ><ion-icon name="add-outline"></ion-icon
+  ></ion-button>
 
-  <ion-accordion-group>
+  <ion-accordion-group [multiple]="true">
     <ion-accordion
       *ngFor="let child of children; let index = index"
       [value]="index"

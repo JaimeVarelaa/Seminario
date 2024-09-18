@@ -3,3 +3,8 @@ ion-thumbnail {
   overflow: hidden;
   padding: 5px 0;
 }
+
+ion-button[slot='fixed'] {
+    bottom: 5px;
+    right: 5px;
+  }

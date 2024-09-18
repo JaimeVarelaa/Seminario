@@ -1,0 +1,44 @@
+<ion-content class="login-content">
+  <p class="para">Inicia Sesión</p>
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+    <ion-item class="ion-item">
+      <fieldset class="input-item">
+        <legend>Usuario</legend>
+        <ion-input formControlName="user" type="text" required></ion-input>
+      </fieldset>
+    </ion-item>
+    <!--<div *ngIf="loginForm.get('user').invalid && loginForm.get('user').touched">
+      <ion-text color="danger">El usuario es requerido.</ion-text>
+    </div>-->
+
+    <ion-item class="ion-item">
+      <fieldset class="input-item">
+        <legend>Contraseña</legend>
+        <ion-input
+          formControlName="password"
+          type="password"
+          required
+        ></ion-input>
+      </fieldset>
+    </ion-item>
+    <!--<div
+      *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched"
+    >
+      <ion-text color="danger">La contraseña es requerida.</ion-text>
+    </div>-->
+
+    <ion-button
+      expand="full"
+      type="submit"
+      class="login-button"
+      [disabled]="loginForm.invalid"
+      >Login</ion-button
+    >
+  </form>
+</ion-content>
+
+<ion-footer color="white">
+  <ion-toolbar>
+    <p class="copyright">Make A Wish</p>
+  </ion-toolbar>
+</ion-footer>
