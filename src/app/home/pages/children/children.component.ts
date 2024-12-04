@@ -14,7 +14,7 @@ export class ChildrenComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private sqliteService: SqliteService
-  ) {}
+  ) { }
 
   ngOnInit() {
     setTimeout(async () => {
@@ -30,7 +30,6 @@ export class ChildrenComponent implements OnInit {
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        // Si se agrega un niño, lo agregamos a la lista
         this.children.push(result.data);
       }
     });
@@ -45,5 +44,20 @@ export class ChildrenComponent implements OnInit {
       console.error('Error al refrescar la lista de niños:', err);
     }
   }
-  
+  async deleteChild(id: number) {
+    const result: boolean = await this.sqliteService.deleteChild(id);
+    if (result) {
+      const index = this.children.findIndex((child) => child.id === id);
+      if (index !== -1) {
+        this.children.splice(index, 1);
+      }
+    }
+  }
+
+
+  editChild(id: number) {
+    console.log(`Niño editado: ${id}`);
+  }
+
+
 }

@@ -94,18 +94,18 @@ export class SqliteService {
   async addChild(childData: any) {
     console.log(childData);
     const dbName = await this.getDbName();
-  
+
     const maxIdQuery = await CapacitorSQLite.query({
       database: dbName,
       statement: 'SELECT MAX(id) AS maxId FROM children',
       values: [],
     });
-  
+
     let newId = 1;
     if (maxIdQuery.values.length > 0 && maxIdQuery.values[0].maxId != null) {
       newId = maxIdQuery.values[0].maxId + 1;
     }
-  
+
     const sqlChild =
       'INSERT INTO children (id, nombres, apepat, apemat, edad, fecha_nac, deseo, foto) VALUES (?, ?, ?, ?, ?, ?, ?, ?);';
     const valuesChild = [
@@ -118,12 +118,12 @@ export class SqliteService {
       childData.deseo,
       childData.foto,
     ];
-  
+
     const childInsertResult = await CapacitorSQLite.executeSet({
       database: dbName,
       set: [{ statement: sqlChild, values: valuesChild }],
     });
-  
+
     const sqlVivienda =
       'INSERT INTO vivienda (child_id, direccion, techo, piso, habitaciones, combustible, personas) VALUES (?, ?, ?, ?, ?, ?, ?);';
     const valuesVivienda = [
@@ -135,52 +135,52 @@ export class SqliteService {
       childData.combustible,
       childData.personas,
     ];
-  
+
     await CapacitorSQLite.executeSet({
       database: dbName,
       set: [{ statement: sqlVivienda, values: valuesVivienda }],
     });
-  
+
     const sqlSalud =
       'INSERT INTO salud (child_id, enfermedad_cronica) VALUES (?, ?);';
     const valuesSalud = [newId, childData.enfermedad_cronica];
-  
+
     await CapacitorSQLite.executeSet({
       database: dbName,
       set: [{ statement: sqlSalud, values: valuesSalud }],
     });
-  
+
     const sqlFamilia =
       'INSERT INTO familia (child_id, personas_trabajan) VALUES (?, ?);';
     const valuesFamilia = [newId, childData.personas_trabajan];
-  
+
     await CapacitorSQLite.executeSet({
       database: dbName,
       set: [{ statement: sqlFamilia, values: valuesFamilia }],
     });
-  
+
     if (this.isWeb) {
       CapacitorSQLite.saveToStore({ database: dbName });
     }
-  
+
     return childInsertResult;
   }
-  
+
   async getChildren(): Promise<any[]> {
     const dbName = await this.getDbName();
     await CapacitorSQLite.open({ database: dbName });
-  
+
     try {
       const childrenQuery = await CapacitorSQLite.query({
         database: dbName,
         statement: 'SELECT * FROM children',
         values: [],
       });
-  
+
       if (childrenQuery.values.length === 0) {
         return [];
       }
-  
+
       const childrenData = await Promise.all(
         childrenQuery.values.map(async (child) => {
           const viviendaQuery = await CapacitorSQLite.query({
@@ -189,21 +189,21 @@ export class SqliteService {
             values: [child.id],
           });
           const viviendaData = viviendaQuery.values[0] || {};
-  
+
           const saludQuery = await CapacitorSQLite.query({
             database: dbName,
             statement: 'SELECT * FROM salud WHERE child_id = ?',
             values: [child.id],
           });
           const saludData = saludQuery.values[0] || {};
-  
+
           const familiaQuery = await CapacitorSQLite.query({
             database: dbName,
             statement: 'SELECT * FROM familia WHERE child_id = ?',
             values: [child.id],
           });
           const familiaData = familiaQuery.values[0] || {};
-  
+
           return {
             id: child.id,
             nombres: child.nombres,
@@ -224,14 +224,59 @@ export class SqliteService {
           };
         })
       );
-  
+
       return childrenData;
     } catch (err) {
       console.error('Error querying database:', err);
       return [];
     }
   }
-  
+
+  async deleteChild(id: number): Promise<boolean> {
+    const dbName = await this.getDbName();
+
+    const sqlStatements = [
+      {
+        statement: 'DELETE FROM children WHERE id = ?',
+        values: [id],
+      },
+      {
+        statement: 'DELETE FROM vivienda WHERE child_id = ?',
+        values: [id],
+      },
+      {
+        statement: 'DELETE FROM salud WHERE child_id = ?',
+        values: [id],
+      },
+      {
+        statement: 'DELETE FROM familia WHERE child_id = ?',
+        values: [id],
+      },
+    ];
+
+    try {
+      const result = await CapacitorSQLite.executeSet({
+        database: dbName,
+        set: sqlStatements,
+      });
+
+      if (this.isWeb) {
+        await CapacitorSQLite.saveToStore({ database: dbName });
+      }
+
+      if (result.changes && result.changes.changes > 0) {
+        console.log(`Niño con ID ${id} eliminado correctamente.`);
+        return true;
+      } else {
+        console.warn(`No se encontró ningún niño con ID ${id} para eliminar.`);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error al eliminar el niño:', error);
+      return false;
+    }
+  }
+
 
   async create(language: string) {
     let sql = 'INSERT INTO languages VALUES(?)';

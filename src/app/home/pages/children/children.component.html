@@ -14,17 +14,10 @@
   </ion-button>
 
   <ion-accordion-group [multiple]="true">
-    <ion-accordion
-      *ngFor="let child of children; let index = index"
-      [value]="index"
-    >
+    <ion-accordion *ngFor="let child of children; let index = index" [value]="index">
       <ion-item slot="header" color="light" lines="none">
         <ion-thumbnail slot="start">
-          <img
-            alt="foto"
-            [src]="child.foto || 'assets/icon/logo_512.png'"
-            loading="lazy"
-          />
+          <img alt="foto" [src]="child.foto || 'assets/icon/logo_512.png'" loading="lazy" />
         </ion-thumbnail>
         <ion-label class="ion-text-wrap">
           <h2>{{ child.nombres }} {{ child.apepat }} {{ child.apemat }}</h2>
@@ -58,6 +51,12 @@
           <strong>Personas que trabajan:</strong>
           {{ child.personas_trabajan || "No especificado" }}
         </p>
+        <ion-button (click)="editChild(child.id)" color="primary">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="deleteChild(child.id)" color="secondary">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
       </div>
     </ion-accordion>
   </ion-accordion-group>
