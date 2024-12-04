@@ -91,68 +91,148 @@ export class SqliteService {
     return this.dbName;
   }
 
-  async addChild(child: {
-    nombres: string;
-    apepat: string;
-    apemat: string;
-    edad: number;
-    fecha_nac: string;
-    deseo: string;
-    foto: string;
-  }) {
-    let sql =
-      'INSERT INTO children (nombres, apepat, apemat, edad, fecha_nac, deseo, foto) VALUES (?, ?, ?, ?, ?, ?, ?);';
+  async addChild(childData: any) {
+    console.log(childData);
     const dbName = await this.getDbName();
-    const values = [
-      child.nombres,
-      child.apepat,
-      child.apemat,
-      child.edad,
-      child.fecha_nac,
-      child.deseo,
-      child.foto,
-    ];
-    return CapacitorSQLite.executeSet({
+  
+    const maxIdQuery = await CapacitorSQLite.query({
       database: dbName,
-      set: [
-        {
-          statement: sql,
-          values: values,
-        },
-      ],
-    })
-      .then((changes: capSQLiteChanges) => {
-        if (this.isWeb) {
-          CapacitorSQLite.saveToStore({ database: dbName });
-        }
-        return changes;
-      })
-      .catch((err) => Promise.reject(err));
+      statement: 'SELECT MAX(id) AS maxId FROM children',
+      values: [],
+    });
+  
+    let newId = 1;
+    if (maxIdQuery.values.length > 0 && maxIdQuery.values[0].maxId != null) {
+      newId = maxIdQuery.values[0].maxId + 1;
+    }
+  
+    const sqlChild =
+      'INSERT INTO children (id, nombres, apepat, apemat, edad, fecha_nac, deseo, foto) VALUES (?, ?, ?, ?, ?, ?, ?, ?);';
+    const valuesChild = [
+      newId,
+      childData.nombres,
+      childData.apepat,
+      childData.apemat,
+      childData.edad,
+      childData.fecha_nac,
+      childData.deseo,
+      childData.foto,
+    ];
+  
+    const childInsertResult = await CapacitorSQLite.executeSet({
+      database: dbName,
+      set: [{ statement: sqlChild, values: valuesChild }],
+    });
+  
+    const sqlVivienda =
+      'INSERT INTO vivienda (child_id, direccion, techo, piso, habitaciones, combustible, personas) VALUES (?, ?, ?, ?, ?, ?, ?);';
+    const valuesVivienda = [
+      newId,
+      childData.direccion,
+      childData.techo,
+      childData.piso,
+      childData.habitaciones,
+      childData.combustible,
+      childData.personas,
+    ];
+  
+    await CapacitorSQLite.executeSet({
+      database: dbName,
+      set: [{ statement: sqlVivienda, values: valuesVivienda }],
+    });
+  
+    const sqlSalud =
+      'INSERT INTO salud (child_id, enfermedad_cronica) VALUES (?, ?);';
+    const valuesSalud = [newId, childData.enfermedad_cronica];
+  
+    await CapacitorSQLite.executeSet({
+      database: dbName,
+      set: [{ statement: sqlSalud, values: valuesSalud }],
+    });
+  
+    const sqlFamilia =
+      'INSERT INTO familia (child_id, personas_trabajan) VALUES (?, ?);';
+    const valuesFamilia = [newId, childData.personas_trabajan];
+  
+    await CapacitorSQLite.executeSet({
+      database: dbName,
+      set: [{ statement: sqlFamilia, values: valuesFamilia }],
+    });
+  
+    if (this.isWeb) {
+      CapacitorSQLite.saveToStore({ database: dbName });
+    }
+  
+    return childInsertResult;
   }
-
-  async getChild(): Promise<any[]> {
-    let sql = 'SELECT * FROM children';
+  
+  async getChildren(): Promise<any[]> {
     const dbName = await this.getDbName();
     await CapacitorSQLite.open({ database: dbName });
   
     try {
-      const response = await CapacitorSQLite.query({
+      const childrenQuery = await CapacitorSQLite.query({
         database: dbName,
-        statement: sql,
+        statement: 'SELECT * FROM children',
         values: [],
       });
   
-      if (this.isIOS && response.values.length > 0) {
-        response.values.shift();
+      if (childrenQuery.values.length === 0) {
+        return [];
       }
   
-      return response.values as any[];
+      const childrenData = await Promise.all(
+        childrenQuery.values.map(async (child) => {
+          const viviendaQuery = await CapacitorSQLite.query({
+            database: dbName,
+            statement: 'SELECT * FROM vivienda WHERE child_id = ?',
+            values: [child.id],
+          });
+          const viviendaData = viviendaQuery.values[0] || {};
+  
+          const saludQuery = await CapacitorSQLite.query({
+            database: dbName,
+            statement: 'SELECT * FROM salud WHERE child_id = ?',
+            values: [child.id],
+          });
+          const saludData = saludQuery.values[0] || {};
+  
+          const familiaQuery = await CapacitorSQLite.query({
+            database: dbName,
+            statement: 'SELECT * FROM familia WHERE child_id = ?',
+            values: [child.id],
+          });
+          const familiaData = familiaQuery.values[0] || {};
+  
+          return {
+            id: child.id,
+            nombres: child.nombres,
+            apepat: child.apepat,
+            apemat: child.apemat,
+            edad: child.edad,
+            fecha_nac: child.fecha_nac,
+            deseo: child.deseo,
+            foto: child.foto,
+            direccion: viviendaData.direccion,
+            techo: viviendaData.techo,
+            piso: viviendaData.piso,
+            habitaciones: viviendaData.habitaciones,
+            combustible: viviendaData.combustible,
+            personas: viviendaData.personas,
+            enfermedad_cronica: saludData.enfermedad_cronica,
+            personas_trabajan: familiaData.personas_trabajan,
+          };
+        })
+      );
+  
+      return childrenData;
     } catch (err) {
       console.error('Error querying database:', err);
       return [];
     }
   }
   
+
   async create(language: string) {
     let sql = 'INSERT INTO languages VALUES(?)';
     const dbName = await this.getDbName();

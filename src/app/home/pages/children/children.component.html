@@ -1,13 +1,17 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title class="ion-text-center"> Niños </ion-title>
+    <ion-title class="ion-text-center">Niños</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-button slot="fixed" (click)="presentAddChildAlert()"
-    ><ion-icon name="add-outline"></ion-icon
-  ></ion-button>
+  <ion-button slot="fixed" class="add" (click)="presentAddChildModal()" color="secondary">
+    <ion-icon name="add-outline"></ion-icon>
+  </ion-button>
+
+  <ion-button slot="fixed" class="refesh" (click)="refreshChildren()" color="secondary">
+    <ion-icon name="reload-outline"></ion-icon>
+  </ion-button>
 
   <ion-accordion-group [multiple]="true">
     <ion-accordion
@@ -16,16 +20,44 @@
     >
       <ion-item slot="header" color="light" lines="none">
         <ion-thumbnail slot="start">
-          <img alt="foto" [src]="child.foto" loading="lazy" />
+          <img
+            alt="foto"
+            [src]="child.foto || 'assets/icon/logo_512.png'"
+            loading="lazy"
+          />
         </ion-thumbnail>
         <ion-label class="ion-text-wrap">
           <h2>{{ child.nombres }} {{ child.apepat }} {{ child.apemat }}</h2>
           <p>{{ child.edad }} años</p>
         </ion-label>
       </ion-item>
+
       <div class="ion-padding" slot="content">
-        <p>Fecha de Nacimiento: {{ child.fecha_nac }}</p>
-        <p>Deseo: {{ child.deseo }}</p>
+        <p>
+          <strong>Fecha de Nacimiento:</strong> {{ child.fecha_nac || "N/A" }}
+        </p>
+        <p><strong>Deseo:</strong> {{ child.deseo || "No especificado" }}</p>
+        <p>
+          <strong>Dirección:</strong> {{ child.direccion || "No disponible" }}
+        </p>
+        <p>
+          <strong>Enfermedad Crónica:</strong>
+          {{ child.enfermedad_cronica || "No especificado" }}
+        </p>
+        <p>
+          <strong>Personas en el hogar:</strong>
+          {{ child.personas || "No especificado" }}
+        </p>
+        <p>
+          <strong>Habitaciones:</strong>
+          {{ child.habitaciones || "No especificado" }}
+        </p>
+        <p><strong>Techo:</strong> {{ child.techo || "No especificado" }}</p>
+        <p><strong>Piso:</strong> {{ child.piso || "No especificado" }}</p>
+        <p>
+          <strong>Personas que trabajan:</strong>
+          {{ child.personas_trabajan || "No especificado" }}
+        </p>
       </div>
     </ion-accordion>
   </ion-accordion-group>

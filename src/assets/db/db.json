@@ -1,86 +1,114 @@
 {
-    "database": "makeawish.db",
-    "version": 1,
-    "encrypted": false,
-    "mode": "full",
-    "tables": [
-      {
-        "name": "children",
-        "schema": [
-          { "column": "id", "value": "INTEGER" },
-          { "column": "nombres", "value": "TEXT NOT NULL" },
-          { "column": "apepat", "value": "TEXT NOT NULL" },
-          { "column": "apemat", "value": "TEXT" },
-          { "column": "edad", "value": "INTEGER NOT NULL" },
-          { "column": "fecha_nac", "value": "DATE NOT NULL" },
-          { "column": "deseo", "value": "TEXT" },
-          { "column": "foto", "value": "BLOB NOT NULL" }
-        ]
-      },
-      {
-        "name": "people",
-        "schema": [
-          { "column": "id", "value": "INTEGER" },
-          { "column": "nombres", "value": "TEXT NOT NULL" },
-          { "column": "apepat", "value": "TEXT NOT NULL" },
-          { "column": "apemat", "value": "TEXT" },
-          { "column": "fecha_nac", "value": "DATE NOT NULL" },
-          { "column": "ocupacion", "value": "TEXT" },
-          { "column": "foto", "value": "BLOB" }
-        ]
-      },
-      {
-        "name": "address",
-        "schema": [
-          { "column": "id", "value": "INTEGER" },
-          { "column": "calle", "value": "TEXT NOT NULL" },
-          { "column": "no_ext", "value": "NUMERIC NOT NULL" },
-          { "column": "colonia", "value": "TEXT NOT NULL" },
-          { "column": "municipio", "value": "TEXT NOT NULL" },
-          { "column": "cp", "value": "NUMERIC NOT NULL" },
-          { "column": "coordenadas", "value": "TEXT" }
-        ]
-      },
-      {
-        "name": "child_address",
-        "schema": [
-          { "column": "child_id", "value": "INTEGER NOT NULL" },
-          { "column": "address_id", "value": "INTEGER NOT NULL" }
-        ]
-      },
-      {
-        "name": "person_address",
-        "schema": [
-          { "column": "person_id", "value": "INTEGER NOT NULL" },
-          { "column": "address_id", "value": "INTEGER NOT NULL" }
-        ]
-      },
-      {
-        "name": "child_contact",
-        "schema": [
-          { "column": "id", "value": "INTEGER" },
-          { "column": "child_id", "value": "INTEGER NOT NULL" },
-          { "column": "telefono", "value": "NUMERIC" }
-        ]
-      },
-      {
-        "name": "person_contact",
-        "schema": [
-          { "column": "id", "value": "INTEGER" },
-          { "column": "person_id", "value": "INTEGER NOT NULL" },
-          { "column": "telefono", "value": "NUMERIC" }
-        ]
-      },
-      {
-        "name": "resources",
-        "schema": [
-          { "column": "id", "value": "INTEGER" },
-          { "column": "person_id", "value": "INTEGER NOT NULL" },
-          { "column": "descripcion", "value": "TEXT NOT NULL" },
-          { "column": "cantidad", "value": "INTEGER NOT NULL" },
-          { "column": "fecha_entrega", "value": "DATE NOT NULL" }
-        ]
-      }
-    ]
-  }
-  
+  "database": "makeawish.db",
+  "version": 1,
+  "encrypted": false,
+  "mode": "full",
+  "tables": [
+    {
+      "name": "children",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "nombres", "value": "TEXT NOT NULL" },
+        { "column": "apepat", "value": "TEXT NOT NULL" },
+        { "column": "apemat", "value": "TEXT" },
+        { "column": "edad", "value": "INTEGER NOT NULL" },
+        { "column": "fecha_nac", "value": "DATE NOT NULL" },
+        { "column": "deseo", "value": "TEXT" },
+        { "column": "foto", "value": "BLOB NOT NULL" }
+      ]
+    },
+    {
+      "name": "vivienda",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "child_id", "value": "INTEGER NOT NULL" },
+        { "column": "direccion", "value": "TEXT" },
+        { "column": "techo", "value": "TEXT" },
+        { "column": "piso", "value": "TEXT" },
+        { "column": "habitaciones", "value": "TEXT" },
+        { "column": "combustible", "value": "TEXT" },
+        { "column": "personas", "value": "TEXT" }
+      ]
+    },
+    {
+      "name": "salud",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "child_id", "value": "INTEGER NOT NULL" },
+        { "column": "enfermedad_cronica", "value": "TEXT" }
+      ]
+    },
+    {
+      "name": "familia",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "child_id", "value": "INTEGER NOT NULL" },
+        { "column": "personas_trabajan", "value": "INTEGER" }
+      ]
+    },
+    {
+      "name": "people",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "nombres", "value": "TEXT NOT NULL" },
+        { "column": "apepat", "value": "TEXT NOT NULL" },
+        { "column": "apemat", "value": "TEXT" },
+        { "column": "fecha_nac", "value": "DATE NOT NULL" },
+        { "column": "ocupacion", "value": "TEXT" },
+        { "column": "foto", "value": "BLOB" }
+      ]
+    },
+    {
+      "name": "address",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "calle", "value": "TEXT NOT NULL" },
+        { "column": "no_ext", "value": "NUMERIC NOT NULL" },
+        { "column": "colonia", "value": "TEXT NOT NULL" },
+        { "column": "municipio", "value": "TEXT NOT NULL" },
+        { "column": "cp", "value": "NUMERIC NOT NULL" },
+        { "column": "coordenadas", "value": "TEXT" }
+      ]
+    },
+    {
+      "name": "child_address",
+      "schema": [
+        { "column": "child_id", "value": "INTEGER NOT NULL" },
+        { "column": "address_id", "value": "INTEGER NOT NULL" }
+      ]
+    },
+    {
+      "name": "person_address",
+      "schema": [
+        { "column": "person_id", "value": "INTEGER NOT NULL" },
+        { "column": "address_id", "value": "INTEGER NOT NULL" }
+      ]
+    },
+    {
+      "name": "child_contact",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "child_id", "value": "INTEGER NOT NULL" },
+        { "column": "telefono", "value": "NUMERIC" }
+      ]
+    },
+    {
+      "name": "person_contact",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "person_id", "value": "INTEGER NOT NULL" },
+        { "column": "telefono", "value": "NUMERIC" }
+      ]
+    },
+    {
+      "name": "resources",
+      "schema": [
+        { "column": "id", "value": "INTEGER" },
+        { "column": "person_id", "value": "INTEGER NOT NULL" },
+        { "column": "descripcion", "value": "TEXT NOT NULL" },
+        { "column": "cantidad", "value": "INTEGER NOT NULL" },
+        { "column": "fecha_entrega", "value": "DATE NOT NULL" }
+      ]
+    }
+  ]
+}

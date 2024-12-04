@@ -38,3 +38,10 @@ ion-footer {
     color: $text_gold_color;
     text-align: center;
 }    
+
+.item_inner {
+  border-style: none !important;
+}
+ion-item {
+  --border-width: 0;
+}

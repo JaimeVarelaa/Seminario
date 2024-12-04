@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Agregar Niño</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form>
+    <!-- Datos del Niño -->
+    <ion-item>
+      <ion-label position="stacked">Nombres</ion-label>
+      <ion-input [value]="childData.nombres" (input)="changeValue($event, 'nombres')" name="nombres" required></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Apellido Paterno</ion-label>
+      <ion-input [value]="childData.apepat" (input)="changeValue($event, 'apepat')" name="apepat" required></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Apellido Materno</ion-label>
+      <ion-input [value]="childData.apemat" (input)="changeValue($event, 'apemat')" name="apemat" required></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Edad</ion-label>
+      <ion-input [value]="childData.edad" (input)="changeValue($event, 'edad')" name="edad" type="number" required></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Fecha de Nacimiento</ion-label>
+      <ion-input [value]="childData.fecha_nac" (input)="changeValue($event, 'fecha_nac')" name="fecha_nac" type="date" required></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="stacked">Deseo</ion-label>
+      <ion-input [value]="childData.deseo" (input)="changeValue($event, 'deseo')" name="deseo" required></ion-input>
+    </ion-item>
+    
+
+    <!-- Foto del niño -->
+    <ion-item>
+      <ion-label position="stacked">Foto del Niño</ion-label>
+      <ion-thumbnail *ngIf="childData.foto" (click)="capturePhoto()" style="text-align: center; width: 80%; margin: 0 auto; height: 200px; overflow: hidden;">
+        <img [src]="childData.foto" alt="Foto del niño" style="width: 100%; height: 100%; object-fit: cover;" />
+      </ion-thumbnail>
+      <ion-thumbnail *ngIf="!childData.foto" (click)="capturePhoto()" style="text-align: center; width: 80%; margin: 0 auto; height: 200px; overflow: hidden;">
+        <img src="assets/icon/logo_512.png" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;" />
+      </ion-thumbnail>
+    </ion-item>
+
+    <!-- Datos de Contacto -->
+    <ion-item>
+      <ion-label position="stacked">Dirección</ion-label>
+      <ion-input [value]="childData.direccion" (input)="changeValue($event, 'direccion')" name="direccion" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Teléfono</ion-label>
+      <ion-input [value]="childData.telefono" (input)="changeValue($event, 'telefono')" name="telefono" type="tel" required></ion-input>
+    </ion-item>
+
+    <!-- Encuesta de Vivienda -->
+    <ion-item>
+      <ion-label position="stacked">¿La vivienda es?</ion-label>
+      <ion-select [value]="childData.vivienda" (ionChange)="changeValue($event, 'vivienda')" name="vivienda" required>
+        <ion-select-option value="occupied">Ocupada</ion-select-option>
+        <ion-select-option value="rented">Rentada</ion-select-option>
+        <ion-select-option value="loaned">Prestada</ion-select-option>
+        <ion-select-option value="owned">Propia</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">¿De qué material es el techo?</ion-label>
+      <ion-select [value]="childData.techo" (ionChange)="changeValue($event, 'techo')" name="techo" required>
+        <ion-select-option value="cardboard_or_tarp">Cartón o lona</ion-select-option>
+        <ion-select-option value="zinc_or_fibrocement">Lamina de zinc/fibrocemento</ion-select-option>
+        <ion-select-option value="galvanized_sheet">Lamina Galvanizada</ion-select-option>
+        <ion-select-option value="concrete">Concreto loza</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">¿De qué material es el piso?</ion-label>
+      <ion-select [value]="childData.piso" (ionChange)="changeValue($event, 'piso')" name="piso" required>
+        <ion-select-option value="dirt">Tierra</ion-select-option>
+        <ion-select-option value="raw_cement">Cemento sin pulir</ion-select-option>
+        <ion-select-option value="polished_cement">Cemento pulido/firme</ion-select-option>
+        <ion-select-option value="ceramic_tiles">Loseta/cerámica</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">¿Número de habitaciones en el hogar?</ion-label>
+      <ion-select [value]="childData.habitaciones" (ionChange)="changeValue($event, 'habitaciones')" name="habitaciones" required>
+        <ion-select-option value="1">1</ion-select-option>
+        <ion-select-option value="2">2</ion-select-option>
+        <ion-select-option value="3">3</ion-select-option>
+        <ion-select-option value="4_or_more">4 o más</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">¿Qué combustible se usa para cocinar?</ion-label>
+      <ion-select [value]="childData.combustible" (ionChange)="changeValue($event, 'combustible')" name="combustible" required>
+        <ion-select-option value="wood_or_charcoal">Leña o carbón</ion-select-option>
+        <ion-select-option value="gasoline_or_diesel">Gasolina o diésel</ion-select-option>
+        <ion-select-option value="lpg_or_natural_gas">Gas LP o gas natural</ion-select-option>
+        <ion-select-option value="electricity">Electricidad</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Encuesta de Hogar y Personas -->
+    <ion-item>
+      <ion-label position="stacked">¿Cuántas personas viven en el domicilio?</ion-label>
+      <ion-select [value]="childData.personas" (ionChange)="changeValue($event, 'personas')" name="personas" required>
+        <ion-select-option value="more_than_6">Más de 6 personas</ion-select-option>
+        <ion-select-option value="4_to_6">4 a 6 personas</ion-select-option>
+        <ion-select-option value="2_to_4">2 a 4 personas</ion-select-option>
+        <ion-select-option value="1_person">1 persona</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">¿Algún familiar tiene alguna enfermedad crónica?</ion-label>
+      <ion-input [value]="childData.enfermedad_cronica" (input)="changeValue($event, 'enfermedad_cronica')" name="enfermedad_cronica" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">¿Cuántas personas trabajan?</ion-label>
+      <ion-input [value]="childData.personas_trabajan" (input)="changeValue($event, 'personas_trabajan')" name="personas_trabajan" type="number" required></ion-input>
+    </ion-item>
+
+    <ion-button (click)="addChild()" expand="full" color="secondary">Agregar</ion-button>
+  </form>
+</ion-content>

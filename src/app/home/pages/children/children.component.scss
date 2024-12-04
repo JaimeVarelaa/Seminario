@@ -4,7 +4,12 @@ ion-thumbnail {
   padding: 5px 0;
 }
 
-ion-button[slot='fixed'] {
-    bottom: 5px;
-    right: 5px;
-  }
+.add {
+  bottom: 5px;
+  right: 5px;
+}
+
+.refesh {
+  bottom: 5px;
+  left: 5px;
+}
