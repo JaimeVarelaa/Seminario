@@ -1,0 +1,48 @@
+Preguntas:
+
+  Vivienda:
+
+    La vivienda es:
+      -Ocupada
+      -Rentada
+      -Prestada
+      -Propia
+
+    ¿De qué material es el techo de la vivienda?
+      -Cartón o lona
+      -Lamina de zinc/fibrocemento
+      -Lamina Galvanizada
+      -Concreto loza
+
+    ¿De qué material es el piso de la vivienda?
+      -Tierra
+      -Cemento sin pulir
+      -Cemento pulido/firme
+      -Loseta/cerámica
+
+    ¿Número de habitaciones en el hogar?
+      -1
+      -2
+      -3
+      -4 o más
+
+    ¿Qué combustible se usa para cocinar?
+      -Leña o carbón
+      -Gasolina o diésel
+      -Gas LP o gas natural
+      -Electricidad
+
+  Hogar y personas:
+
+    ¿Cuántas personas viven en el domicilio?
+      -Más de 6 personas
+      -4 a 6 personas
+      -2 a 4 personas
+      -1 persona
+
+    ¿Algún familiar tiene alguna enfermedad crónica?
+      -Sacar n TextField con un campo
+
+    ¿Cuántas personas trabajan?
+      Salario
+        -0km
