@@ -1,3 +1,112 @@
-label {
-    padding-bottom: 1rem;
-}
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .step-indicator {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 20px 0 0 0;
+  }
+  
+  .step {
+    text-align: center;
+    flex: 1;
+  }
+  
+  .circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--ion-color-light);
+    border: 2px solid var(--ion-color-medium);
+    color: var(--ion-color-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 0 auto;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .label {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--ion-color-medium);
+  }
+  
+  .step.active .circle {
+    background-color: var(--ion-color-primary);
+    border-color: var(--ion-color-primary);
+    color: var(--ion-color-light);
+  }
+  
+  .step.active .label {
+    color: var(--ion-color-primary-shade);
+  }
+  
+  .content-between {
+    flex-grow: 1;
+    border-top: 2px solid var(--ion-color-primary-shade);
+    border-bottom: 2px solid var(--ion-color-primary-shade);
+    margin: 10px;
+    padding: 10px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px 5px;
+  }
+  
+  .button-container ion-button {
+    flex: 1;
+    margin: 0 10px;
+  }
+  
+  ion-button[expand="block"] {
+    width: 45%;
+  }
+  
+  ion-button ion-icon {
+    margin-right: 8px;
+  }
+  
+  ion-button[disabled] {
+    opacity: 0.5;
+  }
+  
+  .photo-section {
+    height: 100%;
+  
+    .photo-container {
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .photo-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      flex-grow: 1;
+    }
+  
+    .photo-indicator {
+      color: var(--ion-color-secondary);
+      margin: 10px 0;
+      font-size: 16px;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+  

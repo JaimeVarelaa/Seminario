@@ -79,11 +79,11 @@
         { "column": "vivienda", "value": "TEXT NOT NULL" },
         { "column": "techo", "value": "TEXT NOT NULL" },
         { "column": "piso", "value": "TEXT NOT NULL" },
-        { "column": "num_haitaciones", "value": "INTEGER NOT NULL" },
+        { "column": "num_habitaciones", "value": "TEXT NOT NULL" },
         { "column": "combustible", "value": "TEXT NOT NULL" },
-        { "column": "num_haitantes", "value": "INTEGER NOT NULL" },
+        { "column": "num_habitantes", "value": "TEXT NOT NULL" },
         { "column": "enfermos_cronicos", "value": "TEXT NOT NULL" },
-        { "column": "num_trabajadores", "value": "INTEGER NOT NULL" },
+        { "column": "num_trabajadores", "value": "TEXT NOT NULL" },
         { "column": "adulto", "value": "INTEGER NOT NULL" }
       ]
     },

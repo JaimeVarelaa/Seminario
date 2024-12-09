@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service';
 import { AddChildComponent } from './add-children/add-children.component';
+import { Niño } from 'src/models/adulto.model';
 
 @Component({
   selector: 'app-children',
@@ -9,62 +10,88 @@ import { AddChildComponent } from './add-children/add-children.component';
   styleUrls: ['./children.component.scss'],
 })
 export class ChildrenComponent implements OnInit {
-  children: any[] = [];
+  niño: Niño = this.createEmptyNiño();
+
+  niños: Niño[] = [];
 
   constructor(
     private modalController: ModalController,
     private sqliteService: SqliteService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    setTimeout(async () => {
-      this.children = await this.sqliteService.getChildren();
-      console.log('Children:', this.children);
-    }, 3000);
+    setTimeout(async () => {}, 3000);
+  }
+
+  createEmptyNiño() {
+    return {
+      id: 0,
+      nombres: '',
+      apellido_paterno: '',
+      apellido_materno: '',
+      edad: 0,
+      fecha_nac: '',
+      foto: '',
+      deseo: '',
+    };
+  }
+
+  resetAdulto() {
+    this.niño = this.createEmptyNiño();
   }
 
   handleRefresh(event) {
     setTimeout(() => {
-      console.log("Refrescando ando")
       event.target.complete();
-    }, 2000);
+    }, 0);
   }
 
-  async presentAddChildModal() {
+  async openFormChild() {
     const modal = await this.modalController.create({
       component: AddChildComponent,
+      componentProps: {
+        nino: this.niño,
+        nuevo: true,
+      },
     });
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        this.children.push(result.data);
+        console.log('Modal aceptado:', result.data);
+      } else {
+        console.log('Modal cerrado sin aceptar');
       }
+
+      this.niño = this.createEmptyNiño();
     });
 
     await modal.present();
   }
 
-  async refreshChildren() {
+  async openEditFormPeople(niño: Niño) {
     try {
-      this.children = await this.sqliteService.getChildren();
-    } catch (err) {
-      console.error('Error al refrescar la lista de niños:', err);
-    }
-  }
-  async deleteChild(id: number) {
-    const result: boolean = await this.sqliteService.deleteChild(id);
-    if (result) {
-      const index = this.children.findIndex((child) => child.id === id);
-      if (index !== -1) {
-        this.children.splice(index, 1);
+      const partesFecha = niño.fecha_nac.split('/');
+      niño.fecha_nac = new Date(
+        `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`
+      ).toISOString();
+    } catch (e) {}
+    const modal = await this.modalController.create({
+      component: AddChildComponent,
+      componentProps: {
+        niño: niño,
+        nuevo: false,
+      },
+    });
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        console.log('Modal aceptado:', result.data);
+      } else {
+        console.log('Modal cerrado sin aceptar');
       }
-    }
+
+      this.niño = this.createEmptyNiño();
+    });
+
+    await modal.present();
   }
-
-
-  editChild(id: number) {
-    console.log(`Niño editado: ${id}`);
-  }
-
-
 }

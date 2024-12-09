@@ -1,10 +1,10 @@
 .ion-content-scroll-host::before,
 .ion-content-scroll-host::after {
   position: absolute;
-  
+
   width: 1px;
   height: 1px;
-  
+
   content: "";
 }
 
@@ -17,8 +17,46 @@
 }
 
 .add {
-    position: fixed;
-    right: 5px;
-    bottom: 5px;
+  position: fixed;
+  right: 5px;
+  bottom: 5px;
+}
+ion-thumbnail {
+  border-radius: 50%;
+  overflow: hidden;
 }
 
+ion-accordion.accordion-collapsing ion-item[slot="header"],
+ion-accordion.accordion-collapsed ion-item[slot="header"] {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-light-contrast);
+}
+
+ion-accordion.accordion-expanding ion-item[slot="header"],
+ion-accordion.accordion-expanded ion-item[slot="header"] {
+  --background: var(--ion-color-primary-shade);
+  --color: var(--ion-color-primary-contrast);
+}
+
+.ine {
+  width: 30%;
+  margin-right: 10px;
+  height: auto;
+  object-fit: cover;
+}
+
+ion-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.button-group > ion-button {
+  width: 40%;
+}

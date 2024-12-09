@@ -6,8 +6,12 @@ import { RouterModule } from '@angular/router';
 import { AddPeopleComponent } from './add-people/add-people.component';
 
 @NgModule({
-  imports: [IonicModule, CommonModule, RouterModule.forChild([{ path: '', component: PeopleComponent }])],
+  imports: [
+    IonicModule,
+    CommonModule,
+    RouterModule.forChild([{ path: '', component: PeopleComponent }]),
+  ],
   declarations: [PeopleComponent, AddPeopleComponent],
   exports: [PeopleComponent],
 })
-export class PeopleModule { }
+export class PeopleModule {}

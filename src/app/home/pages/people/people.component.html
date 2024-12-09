@@ -4,14 +4,113 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [scrollY]="true">
-
+<ion-content [fullscreen]="true">
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-button fill="outline" shape="round" class="add" (click)="openFormPeople()"><ion-icon slot="start" name="add-circle-outline"></ion-icon>Registrar Adulto</ion-button>
+  <ion-button
+    color="secondary"
+    fill="outline"
+    shape="round"
+    class="add"
+    (click)="openFormPeople()"
+    ><ion-icon slot="start" name="add-circle-outline"></ion-icon>Registrar
+    Adulto</ion-button
+  >
 
-  <div class="ion-content-scroll-host ion-padding">
+  <div class="ion-content-scroll-host">
+    <ion-accordion-group [multiple]="true">
+      <ion-accordion *ngFor="let adulto of adultos" [value]="adulto.id">
+        <ion-item slot="header" lines="none">
+          <ion-thumbnail slot="start" class="prev">
+            <img
+              alt="foto"
+              [src]="adulto.foto || 'assets/icon/logo_512.png'"
+              loading="lazy"
+            />
+          </ion-thumbnail>
+          <ion-label class="ion-text-wrap">
+            <h2>
+              {{ adulto.nombres }} {{ adulto.apeliido_paterno }}
+              {{ adulto.apellido_materno }}
+            </h2>
+            <h4>{{ adulto.edad }} años</h4>
+          </ion-label>
+        </ion-item>
+
+        <ion-item slot="content">
+          <ion-card>
+            <ion-item>
+              <img
+                [src]="adulto.foto || 'assets/icon/logo_512.png'"
+                alt="Foto de {{ adulto.nombres }}"
+                class="ine"
+              />
+              <ion-label>
+                <p><strong>ID:</strong> {{ adulto.id }}</p>
+                <p>
+                  <strong>Dirección:</strong> {{ adulto.direccion.calle }} #{{
+                    adulto.direccion.numero
+                  }}, {{ adulto.direccion.colonia }}, {{ adulto.direccion.cp }},
+                  {{ adulto.direccion.municipio }},
+                  {{ adulto.direccion.estado }}
+                </p>
+                <p><strong>Teléfono:</strong> {{ adulto.contacto.numero }}</p>
+              </ion-label>
+            </ion-item>
+
+            <ion-accordion>
+              <ion-item slot="header" color="secondary">
+                <ion-label>
+                  <h3>Información Socioeconómica</h3>
+                </ion-label>
+              </ion-item>
+
+              <ion-item slot="content">
+                <ion-label>
+                  <p>
+                    <strong>Vivienda:</strong> {{ adulto.estudio.vivienda }}
+                  </p>
+                  <p><strong>Techo:</strong> {{ adulto.estudio.techo }}</p>
+                  <p><strong>Piso:</strong> {{ adulto.estudio.piso }}</p>
+                  <p>
+                    <strong>Número de Habitaciones:</strong>
+                    {{ adulto.estudio.num_habitaciones }}
+                  </p>
+                  <p>
+                    <strong>Combustible:</strong>
+                    {{ adulto.estudio.combustible }}
+                  </p>
+                  <p>
+                    <strong>Número de Habitantes:</strong>
+                    {{ adulto.estudio.num_habitantes }}
+                  </p>
+                  <p>
+                    <strong>Enfermos Crónicos:</strong>
+                    {{ adulto.estudio.enfermos_cronicos || "No disponible" }}
+                  </p>
+                  <p>
+                    <strong>Número de Trabajadores:</strong>
+                    {{ adulto.estudio.num_trabajadores }}
+                  </p>
+                </ion-label>
+              </ion-item>
+            </ion-accordion>
+
+            <div class="button-group">
+              <ion-button color="primary" (click)="openEditFormPeople(adulto)">
+                <ion-icon name="create-outline"></ion-icon>
+                Editar
+              </ion-button>
+              <ion-button color="danger" (click)="deleteAdulto(adulto)">
+                <ion-icon name="trash-outline"></ion-icon>
+                Eliminar
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-item>
+      </ion-accordion>
+    </ion-accordion-group>
   </div>
 </ion-content>

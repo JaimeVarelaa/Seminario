@@ -1,92 +1,131 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { SqliteService } from 'src/app/services/sqlite.service';
-//import { Geolocation } from '@capacitor/geolocation';
-//import * as L from 'leaflet';
-
+import { Niño } from 'src/models/adulto.model';
 @Component({
   selector: 'app-add-children',
   templateUrl: './add-children.component.html',
   styleUrls: ['./add-children.component.scss'],
 })
 export class AddChildComponent {
-  childData = {
-    nombres: '',
-    apepat: '',
-    apemat: '',
-    edad: null,
-    fecha_nac: '',
-    deseo: '',
-    foto: '',
-    direccion: '',
-    telefono: '',
-    vivienda: '',
-    techo: '',
-    piso: '',
-    habitaciones: '',
-    combustible: '',
-    personas: '',
-    enfermedad_cronica: '',
-    personas_trabajan: null,
-  };
+  @Input() nino: Niño;
+  @Input() nuevo: boolean;
 
-  @Output() childAdded = new EventEmitter<any>();
-
-  //map: L.Map;
-  //marker: L.Marker;
+  currentStep = 1;
+  steps = ['Foto', 'Padre', 'Datos'];
 
   constructor(
     private modalController: ModalController,
+    private alertController: AlertController,
     private sqliteService: SqliteService
   ) {}
 
-  dismiss() {
+  closeModal() {
     this.modalController.dismiss();
   }
-
-  async ngOnInit() {
-    //this.initMap();
-  }
-
-  /*initMap() {
-    this.map = L.map('map').setView([21.8794, -102.3004], 15);
-  
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(this.map);
-  
-    const icon = L.icon({
-      iconUrl: 'assets/images/marker-icon.png',
-      iconRetinaUrl: 'assets/images/marker-icon-2x.png',
-      shadowUrl: 'assets/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41],
-    });
-  
-    this.marker = L.marker([21.8794, -102.3004], { icon }).addTo(this.map);
-  }
-  
-
-  async getLocation() {
-    try {
-      const position = await Geolocation.getCurrentPosition();
-      const { latitude, longitude } = position.coords;
-
-      // Actualizar las coordenadas en el modelo
-      this.childData.ubicacion = { lat: latitude, lng: longitude };
-
-      // Mover el marcador al lugar de la ubicación obtenida
-      this.marker.setLatLng([latitude, longitude]);
-      this.map.setView([latitude, longitude], 15); // Centrar el mapa en la nueva ubicación
-
-      console.log('Ubicación obtenida:', latitude, longitude);
-    } catch (error) {
-      console.error('Error obteniendo la ubicación:', error);
+  async acceptModal() {
+    let result: boolean = false;
+    this.nino.fecha_nac = this.formatDateToDDMMYYYY(
+      new Date(this.nino.fecha_nac)
+    );
+    if (this.nuevo) {
+      //result = await this.adultoService.addAdulto(this.adulto);
+    } else {
+      //result = await this.adultoService.updateAdulto(this.adulto);
     }
-  }*/
+    if (result) {
+      //this.modalController.dismiss(this.adulto);
+    } else {
+      this.presentAlert(
+        'Algo salió mal',
+        'Error al insertar los datos en la base de datos.',
+        'Por favor, inténtalo de nuevo o comunícate con soporte.'
+      );
+    }
+  }
+
+  goBack() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
+  goNext() {
+    if (this.currentStep < this.steps.length && this.checkStep()) {
+      this.currentStep++;
+    } else if (this.currentStep >= this.steps.length && this.checkStep()) {
+      this.acceptModal();
+    }
+  }
+
+  goToStep(step: number) {
+    //this.currentStep = step;
+  }
+
+  public alertButtons = ['Aceptar'];
+  async presentAlert(header: string, subHeader: string, campo: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      subHeader: subHeader,
+      message: campo,
+      buttons: this.alertButtons,
+    });
+
+    await alert.present();
+  }
+
+  checkStep(): boolean {
+    let campos: string = '';
+    switch (this.currentStep) {
+      case 1:
+        if (!this.nino.foto) {
+          campos += 'Foto, ';
+        }
+        break;
+
+      case 2:
+        if (this.nino.idPadre) {
+          campos += 'Padre, ';
+        }
+        break;
+
+      case 3:
+        if (this.nino.nombres === '') {
+          campos += 'Nombres, ';
+        }
+        if (this.nino.apellido_paterno === '') {
+          campos += 'Apellido Paterno, ';
+        }
+        if (this.nino.apellido_materno === '') {
+          campos += 'Apellido Materno, ';
+        }
+        if (this.nino.edad === 0) {
+          campos += 'Edad, ';
+        }
+        if (this.nino.deseo === '') {
+          campos += 'Deseo, ';
+        }
+        break;
+    }
+    if (campos !== '') {
+      campos = campos.slice(0, -2);
+      let parts = campos.split(', ');
+      if (parts.length > 1) {
+        let lastElement = parts.pop();
+        campos = parts.join(', ') + ' y ' + lastElement;
+      }
+
+      this.presentAlert(
+        'Datos incompletos',
+        'Favor de completar los siguientes campos:',
+        campos + '.'
+      );
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   async capturePhoto() {
     try {
@@ -96,24 +135,30 @@ export class AddChildComponent {
         resultType: CameraResultType.Base64,
         source: CameraSource.Camera,
       });
-      this.childData.foto = `data:image/jpeg;base64,${image.base64String}`;
+      this.nino.foto = `data:image/jpeg;base64,${image.base64String}`;
     } catch (error) {
       console.error('Error capturando foto', error);
     }
   }
 
-  async addChild() {
-    try {
-      console.log(this.childData);
-      await this.sqliteService.addChild(this.childData);
-      this.childAdded.emit(this.childData);
-      this.dismiss();
-    } catch (error) {
-      console.error('Error al agregar el niño:', error);
-    }
+  changeValue(event: any, field: string) {
+    const fields = field.split('.');
+    fields.reduce((acc, part, index) => {
+      if (index === fields.length - 1) {
+        acc[part] = event.target.value;
+      } else {
+        if (!acc[part]) {
+          acc[part] = {};
+        }
+      }
+      return acc[part];
+    }, this.nino);
   }
 
-  changeValue(event: any, field: string) {
-    this.childData[field] = event.target.value;
+  formatDateToDDMMYYYY(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 }

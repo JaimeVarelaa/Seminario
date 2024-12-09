@@ -1,6 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Registro</ion-title>
+    <ion-title>{{
+      !nuevo ? "Editar Registro" : "Nuevo Registro"
+    }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeModal()">
         <ion-icon name="close-outline" size="large"></ion-icon>
@@ -12,97 +14,359 @@
 <ion-content>
   <div class="container">
     <div class="step-indicator">
-      <div class="step" *ngFor="let step of steps; let i = index" [class.active]="i < currentStep"
-        [class.clickable]="i <= currentStep" (click)="goToStep(i+1)">
+      <div
+        class="step"
+        *ngFor="let step of steps; let i = index"
+        [class.active]="i < currentStep"
+        [class.clickable]="i <= currentStep"
+        (click)="goToStep(i + 1)"
+      >
         <div class="circle">{{ i + 1 }}</div>
         <div class="label">{{ step }}</div>
       </div>
     </div>
 
     <div class="content-between">
-
       <div *ngIf="currentStep === 1" class="photo-section">
-        <ion-thumbnail *ngIf="adulto.foto" (click)="capturePhoto()" class="photo-container">
+        <ion-thumbnail
+          *ngIf="adulto.foto"
+          (click)="capturePhoto()"
+          class="photo-container"
+        >
           <img [src]="adulto.foto" alt="Foto del adulto" class="photo-image" />
-          <div class="photo-indicator">
-            Toca para cambiar la foto
-          </div>
+          <div class="photo-indicator">Toca para cambiar la foto</div>
         </ion-thumbnail>
 
-        <ion-thumbnail *ngIf="!adulto.foto" (click)="capturePhoto()" class="photo-container">
-          <img src="assets/images/camara-fotografica.png" alt="Foto" class="photo-image" />
-          <div class="photo-indicator">
-            Toca para agregar foto
-          </div>
+        <ion-thumbnail
+          *ngIf="!adulto.foto"
+          (click)="capturePhoto()"
+          class="photo-container"
+        >
+          <img
+            src="assets/images/camara-fotografica.png"
+            alt="Foto"
+            class="photo-image"
+          />
+          <div class="photo-indicator">Toca para agregar foto</div>
         </ion-thumbnail>
       </div>
 
       <div *ngIf="currentStep === 2" class="data-section">
-        <br>
-        <ion-input color="secondary" label="Nombres" label-placement="floating" fill="outline"
-          placeholder="Ingrese el nombre" [value]="adulto.nombres" (input)="changeValue($event, 'nombres')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Apellido Paterno" label-placement="floating" fill="outline"
-          placeholder="Ingrese Apellido Paterno" [value]="adulto.apeliido_paterno"
-          (input)="changeValue($event, 'apeliido_paterno')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Apellido Materno" label-placement="floating" fill="outline"
-          placeholder="Ingrese Apellido Materno" [value]="adulto.apellido_materno"
-          (input)="changeValue($event, 'apellido_materno')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Edad" label-placement="floating" fill="outline" placeholder="Ingrese Edad"
-          type="number" [value]="adulto.edad" (input)="changeValue($event, 'edad')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Teléfono" label-placement="floating" fill="outline" placeholder="4491234567"
-          type="tel" [value]="adulto.contacto.numero" (input)="changeValue($event, 'contacto.numero')"></ion-input>
-        <br>
-        <div class="date" style="display: flex; justify-content: center;">
-          <ion-datetime color="secondary" id="datetime" presentation="date" [value]="adulto.fecha_nac"
-            (ionChange)="changeValue($event, 'fecha_nac')">
+        <br />
+        <ion-input
+          color="secondary"
+          label="Nombres"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese el nombre"
+          [value]="adulto.nombres"
+          (input)="changeValue($event, 'nombres')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Apellido Paterno"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Apellido Paterno"
+          [value]="adulto.apeliido_paterno"
+          (input)="changeValue($event, 'apeliido_paterno')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Apellido Materno"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Apellido Materno"
+          [value]="adulto.apellido_materno"
+          (input)="changeValue($event, 'apellido_materno')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Edad"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Edad"
+          type="number"
+          [value]="adulto.edad"
+          (input)="changeValue($event, 'edad')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Teléfono"
+          label-placement="floating"
+          fill="outline"
+          placeholder="4491234567"
+          type="tel"
+          [value]="adulto.contacto.numero"
+          (input)="changeValue($event, 'contacto.numero')"
+        ></ion-input>
+        <br />
+        <div class="date" style="display: flex; justify-content: center">
+          <ion-datetime
+            color="secondary"
+            id="datetime"
+            presentation="date"
+            [value]="adulto.fecha_nac"
+            (ionChange)="changeValue($event, 'fecha_nac')"
+          >
           </ion-datetime>
         </div>
       </div>
 
       <div *ngIf="currentStep === 3" class="adress-section">
-        <br>
-        <ion-input color="secondary" label="Calle" label-placement="floating" fill="outline" placeholder="Ingrese Calle"
-          [value]="adulto.direccion.calle" (input)="changeValue($event, 'direccion.calle')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Número" label-placement="floating" fill="outline"
-          placeholder="Ingrese número del domicilio" type="number" [value]="adulto.direccion.numero"
-          (input)="changeValue($event, 'direccion.numero')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Colonia" label-placement="floating" fill="outline"
-          placeholder="Ingrese Colonia" [value]="adulto.direccion.colonia"
-          (input)="changeValue($event, 'direccion.colonia')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Código Postal" label-placement="floating" fill="outline"
-          placeholder="Ingrese el Código Postal" type="number" [value]="adulto.direccion.cp"
-          (input)="changeValue($event, 'direccion.cp')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Municipio" label-placement="floating" fill="outline"
-          placeholder="Ingrese Municipio" [value]="adulto.direccion.municipio"
-          (input)="changeValue($event, 'direccion.municipio')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Estado" label-placement="floating" fill="outline"
-          placeholder="Ingrese Estado" [value]="adulto.direccion.estado"
-          (input)="changeValue($event, 'direccion.estado')"></ion-input>
-        <br>
-        <ion-input color="secondary" label="Referencia" label-placement="floating" fill="outline"
-          placeholder="Ingrese Referencia" [value]="adulto.direccion.referencia"
-          (input)="changeValue($event, 'direccion.referencia')"></ion-input>
-        <br>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Calle"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Calle"
+          [value]="adulto.direccion.calle"
+          (input)="changeValue($event, 'direccion.calle')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Número"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese número del domicilio"
+          type="number"
+          [value]="adulto.direccion.numero"
+          (input)="changeValue($event, 'direccion.numero')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Colonia"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Colonia"
+          [value]="adulto.direccion.colonia"
+          (input)="changeValue($event, 'direccion.colonia')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Código Postal"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese el Código Postal"
+          type="number"
+          [value]="adulto.direccion.cp"
+          (input)="changeValue($event, 'direccion.cp')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Municipio"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Municipio"
+          [value]="adulto.direccion.municipio"
+          (input)="changeValue($event, 'direccion.municipio')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Estado"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Estado"
+          [value]="adulto.direccion.estado"
+          (input)="changeValue($event, 'direccion.estado')"
+        ></ion-input>
+        <br />
+        <ion-input
+          color="secondary"
+          label="Referencia"
+          label-placement="floating"
+          fill="outline"
+          placeholder="Ingrese Referencia"
+          [value]="adulto.direccion.referencia"
+          (input)="changeValue($event, 'direccion.referencia')"
+        ></ion-input>
+        <br />
       </div>
 
+      <div *ngIf="currentStep === 4" class="study-section">
+        <ion-list>
+          <ion-item>
+            <ion-select
+              (ionChange)="changeValue($event, 'estudio.vivienda')"
+              name="vivienda"
+              required
+              label="¿La vivienda es?"
+              label-placement="floating"
+              [value]="adulto.estudio.vivienda"
+              color="secondary"
+            >
+              <ion-select-option value="occupied">Ocupada</ion-select-option>
+              <ion-select-option value="rented">Rentada</ion-select-option>
+              <ion-select-option value="loaned">Prestada</ion-select-option>
+              <ion-select-option value="owned">Propia</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <br />
+
+          <ion-item>
+            <ion-select
+              (ionChange)="changeValue($event, 'estudio.techo')"
+              name="techo"
+              required
+              label="¿De qué material es el techo?"
+              label-placement="floating"
+              [value]="adulto.estudio.techo"
+              color="secondary"
+            >
+              <ion-select-option value="cardboard_or_tarp"
+                >Cartón o lona</ion-select-option
+              >
+              <ion-select-option value="zinc_or_fibrocement"
+                >Lamina de zinc/fibrocemento</ion-select-option
+              >
+              <ion-select-option value="galvanized_sheet"
+                >Lamina Galvanizada</ion-select-option
+              >
+              <ion-select-option value="concrete"
+                >Concreto loza</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <br />
+
+          <ion-item>
+            <ion-select
+              (ionChange)="changeValue($event, 'estudio.piso')"
+              name="piso"
+              required
+              label="¿De qué material es el piso?"
+              label-placement="floating"
+              [value]="adulto.estudio.piso"
+              color="secondary"
+            >
+              <ion-select-option value="dirt">Tierra</ion-select-option>
+              <ion-select-option value="raw_cement"
+                >Cemento sin pulir</ion-select-option
+              >
+              <ion-select-option value="polished_cement"
+                >Cemento pulido/firme</ion-select-option
+              >
+              <ion-select-option value="ceramic_tiles"
+                >Loseta/cerámica</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <br />
+
+          <ion-item>
+            <ion-select
+              (ionChange)="changeValue($event, 'estudio.num_habitaciones')"
+              name="num_habitaciones"
+              required
+              label="Número de habitaciones en el hogar"
+              label-placement="floating"
+              [value]="adulto.estudio.num_habitaciones"
+              color="secondary"
+            >
+              <ion-select-option value="1">1</ion-select-option>
+              <ion-select-option value="2">2</ion-select-option>
+              <ion-select-option value="3">3</ion-select-option>
+              <ion-select-option value="4_or_more">4 o más</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <br />
+
+          <ion-item>
+            <ion-select
+              (ionChange)="changeValue($event, 'estudio.combustible')"
+              name="combustible"
+              required
+              label="¿Qué combustible se usa para cocinar?"
+              label-placement="floating"
+              [value]="adulto.estudio.combustible"
+              color="secondary"
+            >
+              <ion-select-option value="wood_or_charcoal"
+                >Leña o carbón</ion-select-option
+              >
+              <ion-select-option value="gasoline_or_diesel"
+                >Gasolina o diésel</ion-select-option
+              >
+              <ion-select-option value="lpg_or_natural_gas"
+                >Gas LP o gas natural</ion-select-option
+              >
+              <ion-select-option value="electricity"
+                >Electricidad</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <br />
+
+          <ion-item>
+            <ion-select
+              (ionChange)="changeValue($event, 'estudio.num_habitantes')"
+              name="num_habitantes"
+              required
+              label="¿Cuántas personas viven en el domicilio?"
+              label-placement="floating"
+              [value]="adulto.estudio.num_habitantes"
+              color="secondary"
+            >
+              <ion-select-option value="1_person">1 persona</ion-select-option>
+              <ion-select-option value="2_to_4"
+                >2 a 4 personas</ion-select-option
+              >
+              <ion-select-option value="4_to_6"
+                >4 a 6 personas</ion-select-option
+              >
+              <ion-select-option value="more_than_6"
+                >Más de 6 personas</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <br />
+
+          <ion-item>
+            <ion-select
+              (ionChange)="changeValue($event, 'estudio.num_trabajadores')"
+              name="num_trabajadores"
+              required
+              label="¿Cuántas personas trabajan?"
+              label-placement="floating"
+              [value]="adulto.estudio.num_trabajadores"
+              color="secondary"
+            >
+              <ion-select-option value="1_person">1 persona</ion-select-option>
+              <ion-select-option value="2_person">2 personas</ion-select-option>
+              <ion-select-option value="3_to_4"
+                >3 a 4 personas</ion-select-option
+              >
+              <ion-select-option value="more_than_4"
+                >Más de 4 personas</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <br />
+        </ion-list>
+      </div>
     </div>
 
     <div class="button-container">
-      <ion-button expand="block" (click)="goBack()" [disabled]="currentStep === 1">
+      <ion-button
+        expand="block"
+        (click)="goBack()"
+        [disabled]="currentStep === 1"
+      >
         <ion-icon name="arrow-back" slot="start"></ion-icon>
         Atrás
       </ion-button>
       <ion-button expand="block" (click)="goNext()">
-        {{ currentStep === steps.length ? 'Aceptar' : 'Siguiente' }}
+        {{ currentStep === steps.length ? "Aceptar" : "Siguiente" }}
         <ion-icon name="arrow-forward" slot="end"></ion-icon>
       </ion-button>
     </div>

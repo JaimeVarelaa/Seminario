@@ -2,22 +2,28 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AddPeopleComponent } from './add-people/add-people.component';
 import { Adulto } from 'src/models/adulto.model';
+import { AdultoService } from 'src/app/services/adulto.service.service';
 
 @Component({
   selector: 'app-people',
   templateUrl: './people.component.html',
   styleUrls: ['./people.component.scss'],
 })
-
 export class PeopleComponent implements OnInit {
-
   adulto: Adulto = this.createEmptyAdulto();
+
+  adultos: Adulto[] = [];
 
   constructor(
     private modalController: ModalController,
-  ) { }
+    private adultoService: AdultoService
+  ) {}
 
-  ngOnInit() { }
+  async ngOnInit() {
+    setTimeout(async () => {
+      this.adultos = await this.adultoService.getAdultos();
+    }, 3000);
+  }
 
   createEmptyAdulto(): Adulto {
     return {
@@ -28,7 +34,7 @@ export class PeopleComponent implements OnInit {
       fecha_nac: new Date().toISOString(),
       foto: '',
       contacto: {
-        numero: ''
+        numero: '',
       },
       direccion: {
         calle: '',
@@ -38,7 +44,17 @@ export class PeopleComponent implements OnInit {
         municipio: '',
         estado: '',
         referencia: '',
-      }
+      },
+      estudio: {
+        vivienda: '',
+        techo: '',
+        piso: '',
+        num_habitaciones: '',
+        combustible: '',
+        num_habitantes: '',
+        enfermos_cronicos: '',
+        num_trabajadores: '',
+      },
     };
   }
 
@@ -47,16 +63,18 @@ export class PeopleComponent implements OnInit {
   }
 
   handleRefresh(event) {
-    setTimeout(() => {
+    setTimeout(async () => {
+      this.adultos = await this.adultoService.getAdultos();
       event.target.complete();
-    }, 2000);
+    }, 0);
   }
 
   async openFormPeople() {
     const modal = await this.modalController.create({
       component: AddPeopleComponent,
       componentProps: {
-        adulto: this.adulto
+        adulto: this.adulto,
+        nuevo: true,
       },
     });
 
@@ -65,10 +83,51 @@ export class PeopleComponent implements OnInit {
         console.log('Modal aceptado:', result.data);
       } else {
         console.log('Modal cerrado sin aceptar');
-        this.adulto = this.createEmptyAdulto();
       }
+
+      this.adulto = this.createEmptyAdulto();
     });
 
     await modal.present();
   }
+
+  async openEditFormPeople(adulto: Adulto) {
+    try {
+      const partesFecha = adulto.fecha_nac.split('/');
+      adulto.fecha_nac = new Date(
+        `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`
+      ).toISOString();
+    } catch (e) {}
+    const modal = await this.modalController.create({
+      component: AddPeopleComponent,
+      componentProps: {
+        adulto: adulto,
+        nuevo: false,
+      },
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        console.log('Modal aceptado:', result.data);
+      } else {
+        console.log('Modal cerrado sin aceptar');
+      }
+
+      this.adulto = this.createEmptyAdulto();
+    });
+
+    await modal.present();
+  }
+
+  async deleteAdulto(adulto: Adulto) {
+    const result = await this.adultoService.deleteAdulto(adulto.id);
+  
+    if (result) {
+      console.log('Adulto eliminado con éxito');
+      this.adultos = this.adultos.filter(a => a.id !== adulto.id);
+    } else {
+      console.log('Hubo un error al eliminar al adulto');
+    }
+  }
+  
 }
