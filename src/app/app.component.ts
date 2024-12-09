@@ -21,9 +21,9 @@ export class AppComponent {
     this.initApp();
   }
 
-  initApp(){
+  initApp() {
 
-    this.platform.ready().then( async () => {
+    this.platform.ready().then(async () => {
 
       const info = await Device.getInfo();
       this.isWeb = info.platform == 'web';

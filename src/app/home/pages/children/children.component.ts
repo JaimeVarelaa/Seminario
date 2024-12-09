@@ -23,6 +23,13 @@ export class ChildrenComponent implements OnInit {
     }, 3000);
   }
 
+  handleRefresh(event) {
+    setTimeout(() => {
+      console.log("Refrescando ando")
+      event.target.complete();
+    }, 2000);
+  }
+
   async presentAddChildModal() {
     const modal = await this.modalController.create({
       component: AddChildComponent,

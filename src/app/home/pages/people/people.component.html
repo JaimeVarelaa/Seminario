@@ -1,3 +1,17 @@
-<ion-thumbnail style="text-align: center; width: 80%; margin: auto; height: auto;">
-  <img src="assets/images/work-in-progress.png" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;" />
-</ion-thumbnail>
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="primary">Adultos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollY]="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-button fill="outline" shape="round" class="add" (click)="openFormPeople()"><ion-icon slot="start" name="add-circle-outline"></ion-icon>Registrar Adulto</ion-button>
+
+  <div class="ion-content-scroll-host ion-padding">
+  </div>
+</ion-content>

@@ -5,59 +5,62 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-button slot="fixed" class="add" (click)="presentAddChildModal()" color="secondary">
     <ion-icon name="add-outline"></ion-icon>
   </ion-button>
 
-  <ion-button slot="fixed" class="refesh" (click)="refreshChildren()" color="secondary">
-    <ion-icon name="reload-outline"></ion-icon>
-  </ion-button>
 
-  <ion-accordion-group [multiple]="true">
-    <ion-accordion *ngFor="let child of children; let index = index" [value]="index">
-      <ion-item slot="header" color="light" lines="none">
-        <ion-thumbnail slot="start">
-          <img alt="foto" [src]="child.foto || 'assets/icon/logo_512.png'" loading="lazy" />
-        </ion-thumbnail>
-        <ion-label class="ion-text-wrap">
-          <h2>{{ child.nombres }} {{ child.apepat }} {{ child.apemat }}</h2>
-          <p>{{ child.edad }} años</p>
-        </ion-label>
-      </ion-item>
+  <div class="ion-content-scroll-host ion-padding">
+    <ion-accordion-group [multiple]="true">
+      <ion-accordion *ngFor="let child of children; let index = index" [value]="index">
+        <ion-item slot="header" color="light" lines="none">
+          <ion-thumbnail slot="start">
+            <img alt="foto" [src]="child.foto || 'assets/icon/logo_512.png'" loading="lazy" />
+          </ion-thumbnail>
+          <ion-label class="ion-text-wrap">
+            <h2>{{ child.nombres }} {{ child.apepat }} {{ child.apemat }}</h2>
+            <p>{{ child.edad }} años</p>
+          </ion-label>
+        </ion-item>
 
-      <div class="ion-padding" slot="content">
-        <p>
-          <strong>Fecha de Nacimiento:</strong> {{ child.fecha_nac || "N/A" }}
-        </p>
-        <p><strong>Deseo:</strong> {{ child.deseo || "No especificado" }}</p>
-        <p>
-          <strong>Dirección:</strong> {{ child.direccion || "No disponible" }}
-        </p>
-        <p>
-          <strong>Enfermedad Crónica:</strong>
-          {{ child.enfermedad_cronica || "No especificado" }}
-        </p>
-        <p>
-          <strong>Personas en el hogar:</strong>
-          {{ child.personas || "No especificado" }}
-        </p>
-        <p>
-          <strong>Habitaciones:</strong>
-          {{ child.habitaciones || "No especificado" }}
-        </p>
-        <p><strong>Techo:</strong> {{ child.techo || "No especificado" }}</p>
-        <p><strong>Piso:</strong> {{ child.piso || "No especificado" }}</p>
-        <p>
-          <strong>Personas que trabajan:</strong>
-          {{ child.personas_trabajan || "No especificado" }}
-        </p>
-        <ion-button (click)="editChild(child.id)" color="primary">
-          <ion-icon name="create-outline"></ion-icon>
-        </ion-button>
-        <ion-button (click)="deleteChild(child.id)" color="secondary">
-          <ion-icon name="trash-outline"></ion-icon>
-        </ion-button>
-      </div>
-    </ion-accordion>
-  </ion-accordion-group>
+        <div class="ion-padding" slot="content">
+          <p>
+            <strong>Fecha de Nacimiento:</strong> {{ child.fecha_nac || "N/A" }}
+          </p>
+          <p><strong>Deseo:</strong> {{ child.deseo || "No especificado" }}</p>
+          <p>
+            <strong>Dirección:</strong> {{ child.direccion || "No disponible" }}
+          </p>
+          <p>
+            <strong>Enfermedad Crónica:</strong>
+            {{ child.enfermedad_cronica || "No especificado" }}
+          </p>
+          <p>
+            <strong>Personas en el hogar:</strong>
+            {{ child.personas || "No especificado" }}
+          </p>
+          <p>
+            <strong>Habitaciones:</strong>
+            {{ child.habitaciones || "No especificado" }}
+          </p>
+          <p><strong>Techo:</strong> {{ child.techo || "No especificado" }}</p>
+          <p><strong>Piso:</strong> {{ child.piso || "No especificado" }}</p>
+          <p>
+            <strong>Personas que trabajan:</strong>
+            {{ child.personas_trabajan || "No especificado" }}
+          </p>
+          <ion-button (click)="editChild(child.id)" color="primary">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="deleteChild(child.id)" color="secondary">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </div>
 </ion-content>
