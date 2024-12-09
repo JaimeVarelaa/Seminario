@@ -82,17 +82,6 @@
   .photo-section {
     height: 100%;
   
-    .photo-container {
-      text-align: center;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-    }
-  
     .photo-image {
       width: 100%;
       height: 100%;
@@ -110,3 +99,13 @@
     }
   }
   
+  .photo-container {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }

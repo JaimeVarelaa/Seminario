@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { SqliteService } from 'src/app/services/sqlite.service';
 import { AddChildComponent } from './add-children/add-children.component';
+import { NiñoService } from 'src/app/services/niño-service.service';
 import { Niño } from 'src/models/adulto.model';
 
 @Component({
@@ -10,17 +10,20 @@ import { Niño } from 'src/models/adulto.model';
   styleUrls: ['./children.component.scss'],
 })
 export class ChildrenComponent implements OnInit {
-  niño: Niño = this.createEmptyNiño();
+  nino: Niño = this.createEmptyNiño();
 
-  niños: Niño[] = [];
+  ninos: Niño[] = [];
 
   constructor(
     private modalController: ModalController,
-    private sqliteService: SqliteService
-  ) {}
+    private niñoService: NiñoService,
+  ) { }
 
   ngOnInit() {
-    setTimeout(async () => {}, 3000);
+    setTimeout(async () => {
+      this.ninos = await this.niñoService.getNiños();
+      console.log(this.ninos)
+    }, 3000);
   }
 
   createEmptyNiño() {
@@ -30,18 +33,19 @@ export class ChildrenComponent implements OnInit {
       apellido_paterno: '',
       apellido_materno: '',
       edad: 0,
-      fecha_nac: '',
+      fecha_nac: new Date().toISOString(),
       foto: '',
       deseo: '',
     };
   }
 
   resetAdulto() {
-    this.niño = this.createEmptyNiño();
+    this.nino = this.createEmptyNiño();
   }
 
   handleRefresh(event) {
-    setTimeout(() => {
+    setTimeout(async () => {
+      this.ninos = await this.niñoService.getNiños();
       event.target.complete();
     }, 0);
   }
@@ -50,7 +54,7 @@ export class ChildrenComponent implements OnInit {
     const modal = await this.modalController.create({
       component: AddChildComponent,
       componentProps: {
-        nino: this.niño,
+        nino: this.nino,
         nuevo: true,
       },
     });
@@ -62,23 +66,23 @@ export class ChildrenComponent implements OnInit {
         console.log('Modal cerrado sin aceptar');
       }
 
-      this.niño = this.createEmptyNiño();
+      this.nino = this.createEmptyNiño();
     });
 
     await modal.present();
   }
 
-  async openEditFormPeople(niño: Niño) {
+  async openEditFormPeople(nino: Niño) {
     try {
-      const partesFecha = niño.fecha_nac.split('/');
-      niño.fecha_nac = new Date(
+      const partesFecha = nino.fecha_nac.split('/');
+      nino.fecha_nac = new Date(
         `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`
       ).toISOString();
-    } catch (e) {}
+    } catch (e) { }
     const modal = await this.modalController.create({
       component: AddChildComponent,
       componentProps: {
-        niño: niño,
+        nino: nino,
         nuevo: false,
       },
     });
@@ -89,9 +93,21 @@ export class ChildrenComponent implements OnInit {
         console.log('Modal cerrado sin aceptar');
       }
 
-      this.niño = this.createEmptyNiño();
+      this.nino = this.createEmptyNiño();
     });
 
     await modal.present();
   }
+
+  async deleteNino(nino: Niño) {
+    const result = await this.niñoService.deleteNiño(nino.id);
+
+    if (result) {
+      console.log('Adulto eliminado con éxito');
+      this.ninos = this.ninos.filter(a => a.id !== nino.id);
+    } else {
+      console.log('Hubo un error al eliminar al adulto');
+    }
+  }
+
 }

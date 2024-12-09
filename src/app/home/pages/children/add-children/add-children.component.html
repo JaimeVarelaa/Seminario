@@ -12,13 +12,8 @@
 <ion-content>
   <div class="container">
     <div class="step-indicator">
-      <div
-        class="step"
-        *ngFor="let step of steps; let i = index"
-        [class.active]="i < currentStep"
-        [class.clickable]="i <= currentStep"
-        (click)="goToStep(i + 1)"
-      >
+      <div class="step" *ngFor="let step of steps; let i = index" [class.active]="i < currentStep"
+        [class.clickable]="i <= currentStep" (click)="goToStep(i + 1)">
         <div class="circle">{{ i + 1 }}</div>
         <div class="label">{{ step }}</div>
       </div>
@@ -26,36 +21,77 @@
 
     <div class="content-between">
       <div *ngIf="currentStep === 1" class="photo-section">
-        <ion-thumbnail
-          *ngIf="nino.foto"
-          (click)="capturePhoto()"
-          class="photo-container"
-        >
+        <ion-thumbnail *ngIf="nino.foto" (click)="capturePhoto()" class="photo-container">
           <img [src]="nino.foto" alt="Foto del nino" class="photo-image" />
           <div class="photo-indicator">Toca para cambiar la foto</div>
         </ion-thumbnail>
 
-        <ion-thumbnail
-          *ngIf="!nino.foto"
-          (click)="capturePhoto()"
-          class="photo-container"
-        >
-          <img
-            src="assets/images/camara-fotografica.png"
-            alt="Foto"
-            class="photo-image"
-          />
+        <ion-thumbnail *ngIf="!nino.foto" (click)="capturePhoto()" class="photo-container">
+          <img src="assets/images/camara-fotografica.png" alt="Foto" class="photo-image" />
           <div class="photo-indicator">Toca para agregar foto</div>
         </ion-thumbnail>
+      </div>
+
+      <div *ngIf="currentStep === 2" class="padre-section">
+
+        <ion-item>
+          <ion-select class="custom-select" name="padre" required color="secondary" label="Padre del niño"
+            label-placement="floating" placeholder="Elige un adulto" [interfaceOptions]="popoverOptions"
+            (ionChange)="onSelectAdult($event)">
+            <ion-select-option *ngFor="let adulto of adultos" [value]="adulto">
+              {{ adulto.nombres }} {{adulto.apeliido_paterno}} {{adulto.apellido_materno}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-card *ngIf="adultoSeleccionado">
+          <ion-card-header>
+            <ion-card-title>{{ adultoSeleccionado.nombres }} {{adultoSeleccionado.apeliido_paterno}}
+              {{adultoSeleccionado.apellido_materno}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-thumbnail *ngIf="adultoSeleccionado.foto" class="photo-container">
+              <img [src]="adultoSeleccionado.foto" alt="Foto del adultoSeleccionado" class="photo-image" />
+            </ion-thumbnail>
+            <p><strong>Edad:</strong> {{ adultoSeleccionado.edad }}</p>
+            <p><strong>Direccion:</strong> {{ adultoSeleccionado.direccion.calle }}
+              #{{adultoSeleccionado.direccion.numero}}</p>
+
+          </ion-card-content>
+        </ion-card>
+
+      </div>
+
+      <div *ngIf="currentStep === 3" class="datos-section">
+        <br />
+        <ion-input color="secondary" label="Nombres" label-placement="floating" fill="outline"
+          placeholder="Ingrese el nombre" [value]="nino.nombres" (input)="changeValue($event, 'nombres')"></ion-input>
+        <br />
+        <ion-input color="secondary" label="Apellido Paterno" label-placement="floating" fill="outline"
+          placeholder="Ingrese Apellido Paterno" [value]="nino.apellido_paterno"
+          (input)="changeValue($event, 'apellido_paterno')"></ion-input>
+        <br />
+        <ion-input color="secondary" label="Apellido Materno" label-placement="floating" fill="outline"
+          placeholder="Ingrese Apellido Materno" [value]="nino.apellido_materno"
+          (input)="changeValue($event, 'apellido_materno')"></ion-input>
+        <br />
+        <ion-input color="secondary" label="Edad" label-placement="floating" fill="outline" placeholder="Ingrese Edad"
+          type="number" [value]="nino.edad" (input)="changeValue($event, 'edad')"></ion-input>
+        <br />
+        <div class="date" style="display: flex; justify-content: center">
+          <ion-datetime color="secondary" id="datetime" presentation="date" [value]="nino.fecha_nac"
+            (ionChange)="changeValue($event, 'fecha_nac')">
+          </ion-datetime>
+        </div>
+        <br>
+        <ion-input color="secondary" label="Deseo" label-placement="floating" fill="outline" placeholder="Ingrese Deseo"
+          [value]="nino.deseo" (input)="changeValue($event, 'deseo')"></ion-input>
+        <br />
       </div>
     </div>
 
     <div class="button-container">
-      <ion-button
-        expand="block"
-        (click)="goBack()"
-        [disabled]="currentStep === 1"
-      >
+      <ion-button expand="block" (click)="goBack()" [disabled]="currentStep === 1">
         <ion-icon name="arrow-back" slot="start"></ion-icon>
         Atrás
       </ion-button>

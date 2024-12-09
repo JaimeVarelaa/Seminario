@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { SqliteService } from 'src/app/services/sqlite.service';
-import { Niño } from 'src/models/adulto.model';
+import { AdultoService } from 'src/app/services/adulto.service.service';
+import { NiñoService } from 'src/app/services/niño-service.service';
+import { Adulto, Niño } from 'src/models/adulto.model';
 @Component({
   selector: 'app-add-children',
   templateUrl: './add-children.component.html',
@@ -15,11 +16,25 @@ export class AddChildComponent {
   currentStep = 1;
   steps = ['Foto', 'Padre', 'Datos'];
 
+  adultos: Adulto[] = [];
+
+  adultoSeleccionado: Adulto = null;
+
+  popoverOptions = {
+    cssClass: 'custom-popover',
+  };
+
+  onSelectAdult(event: any) {
+    this.adultoSeleccionado = event.detail.value;
+    this.nino.idPadre = this.adultoSeleccionado.id;
+  }
+
   constructor(
     private modalController: ModalController,
     private alertController: AlertController,
-    private sqliteService: SqliteService
-  ) {}
+    private adultoService: AdultoService,
+    private niñoService: NiñoService,
+  ) { }
 
   closeModal() {
     this.modalController.dismiss();
@@ -30,12 +45,12 @@ export class AddChildComponent {
       new Date(this.nino.fecha_nac)
     );
     if (this.nuevo) {
-      //result = await this.adultoService.addAdulto(this.adulto);
+      result = await this.niñoService.addNiño(this.nino);
     } else {
-      //result = await this.adultoService.updateAdulto(this.adulto);
+      result = await this.niñoService.updateNiño(this.nino);
     }
     if (result) {
-      //this.modalController.dismiss(this.adulto);
+      this.modalController.dismiss(this.nino);
     } else {
       this.presentAlert(
         'Algo salió mal',
@@ -51,9 +66,12 @@ export class AddChildComponent {
     }
   }
 
-  goNext() {
+  async goNext() {
     if (this.currentStep < this.steps.length && this.checkStep()) {
       this.currentStep++;
+      if (this.currentStep === 2) {
+        this.adultos = await this.adultoService.getAdultos();
+      }
     } else if (this.currentStep >= this.steps.length && this.checkStep()) {
       this.acceptModal();
     }
@@ -85,7 +103,7 @@ export class AddChildComponent {
         break;
 
       case 2:
-        if (this.nino.idPadre) {
+        if (!this.nino.idPadre) {
           campos += 'Padre, ';
         }
         break;
